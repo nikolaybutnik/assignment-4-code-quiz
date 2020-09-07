@@ -76,7 +76,7 @@ let quizArr = [
 
   {
     question:
-      "Which CSS property creates space around content, inside any define borders?",
+      "Which CSS property creates space around content, inside any defined borders?",
     answerList: {
       a: "Border",
       b: "Margin",
@@ -196,3 +196,34 @@ setInterval(function () {
   countdown -= 1;
   timer.textContent = `${countdown} seconds left`;
 }, 1000);
+
+//Shuffle the quizArr to scramble the order of questions
+let shuffledQuizArr = [];
+for (let i = 0; i < quizArr.length; i++) {
+  let randNum = Math.floor(Math.random() * quizArr.length);
+  shuffledQuizArr.push(quizArr[randNum]);
+}
+console.log(shuffledQuizArr);
+
+// Display first question and related answers on the screen
+let currentQuestion = 0;
+// Current question
+question.textContent = shuffledQuizArr[currentQuestion].question;
+// Current answers
+function showQuiz() {
+  indexCounter = 0;
+  for (let i = 0; i < 4; i++) {
+    answerIndex = [
+      shuffledQuizArr[currentQuestion].answerList.a,
+      shuffledQuizArr[currentQuestion].answerList.b,
+      shuffledQuizArr[currentQuestion].answerList.c,
+      shuffledQuizArr[currentQuestion].answerList.d,
+    ];
+    newDiv = document.createElement("div");
+    newDiv.textContent = answerIndex[indexCounter];
+    answers.appendChild(newDiv);
+    indexCounter++;
+  }
+}
+
+showQuiz();
