@@ -24,15 +24,24 @@
   <body>
     <h1>Coding Quiz</h1>
 
-    <div id="timer"></div>
+    <div id="score">Score: 0</div>
+
+    <button id="beginBtn">Begin Quiz!</button>
+
+    <div id="timer">60</div>
 
     <section>
       <div id="question"></div>
-      <div id="answers"></div>
+      <div id="answers">
+        <div id="a" class="button"></div>
+        <div id="b" class="button"></div>
+        <div id="c" class="button"></div>
+        <div id="d" class="button"></div>
+      </div>
     </section>
 
-    <!-- Custom javascript -->
-    <script src="assets/javascript.js"></script>
+    <div id="info"></div>
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
@@ -50,5 +59,7 @@
       integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
       crossorigin="anonymous"
     ></script>
+    <!-- Custom javascript -->
+    <script src="assets/javascript.js"></script>
   </body>
 </html>

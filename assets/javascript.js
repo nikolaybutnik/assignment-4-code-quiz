@@ -9,10 +9,18 @@
 //Once countdown has finished, get the score variable, ask the user for initials, and store the results in local storage
 //Create a way to view highscores (read results from local storage)
 
-//Get HTML elements
+// Get HTML elements
 let timer = document.getElementById("timer");
 let question = document.getElementById("question");
 let answers = document.getElementById("answers");
+let answerBtn = document.getElementsByClassName("button");
+let beginBtn = document.getElementById("beginBtn");
+let scoreEl = document.getElementById("score");
+let optionA = document.getElementById("a");
+let optionB = document.getElementById("b");
+let optionC = document.getElementById("c");
+let optionD = document.getElementById("d");
+let info = document.getElementById("info");
 
 // Define an array that contains a list of objects containing questions, possible answers, and a correct answer.
 let quizArr = [
@@ -64,7 +72,7 @@ let quizArr = [
   },
 
   {
-    question: "What IS THE || operator?",
+    question: "What is the || operator?",
     answerList: {
       a: "AND operator",
       b: "OR operator",
@@ -134,7 +142,7 @@ let quizArr = [
   },
 
   {
-    question: "Which one of these HTML tags does NOTneed a closing tag?",
+    question: "Which one of these HTML tags does NOT need a closing tag?",
     answerList: {
       a: "img",
       b: "div",
@@ -145,7 +153,7 @@ let quizArr = [
   },
 
   {
-    question: "What does HT in HTML stand for?",
+    question: "What does H in HTML stand for?",
     answerList: {
       a: "Hyperlink",
       b: "Hypermedia",
@@ -190,40 +198,107 @@ let quizArr = [
   },
 ];
 
-// Define a variable that keeps count of remaining time. Deduct 1 every second, overwriting the variable each time.
-let countdown = 90;
-setInterval(function () {
-  countdown -= 1;
-  timer.textContent = `${countdown} seconds left`;
-}, 1000);
+// Define a variable that keeps score
+let score = 0;
+
+// Define a function that keeps count of remaining time. When countdown reaches 0, clear the screen
+let countdown = 60;
+function countdownTimer() {
+  let timerInterval = setInterval(function () {
+    countdown--;
+    timer.textContent = `${countdown} seconds left`;
+    if (countdown === 0) {
+      clearInterval(timerInterval);
+      question.textContent = "";
+      optionA.textContent = "";
+      optionB.textContent = "";
+      optionC.textContent = "";
+      optionD.textContent = "";
+      userInitials = prompt("Game over! Enter your initials: ");
+      timer.textContent = `Thanks for playing! You scored ${score} points. Your highscore havs been registered under ${userInitials}.`;
+    }
+  }, 1000);
+}
 
 //Shuffle the quizArr to scramble the order of questions
-let shuffledQuizArr = [];
-for (let i = 0; i < quizArr.length; i++) {
-  let randNum = Math.floor(Math.random() * quizArr.length);
-  shuffledQuizArr.push(quizArr[randNum]);
-}
+let shuffledQuizArr = quizArr.sort(() => Math.random() - 0.5);
+// Credit: https://flaviocopes.com/how-to-shuffle-array-javascript/
+
 console.log(shuffledQuizArr);
 
-// Display first question and related answers on the screen
+// Define a counter to set question order
 let currentQuestion = 0;
-// Current question
-question.textContent = shuffledQuizArr[currentQuestion].question;
-// Current answers
+
+// Define a function that uses the currentQuestion counter to display the appropriate question and set of answers on the screen
 function showQuiz() {
-  indexCounter = 0;
-  for (let i = 0; i < 4; i++) {
-    answerIndex = [
-      shuffledQuizArr[currentQuestion].answerList.a,
-      shuffledQuizArr[currentQuestion].answerList.b,
-      shuffledQuizArr[currentQuestion].answerList.c,
-      shuffledQuizArr[currentQuestion].answerList.d,
-    ];
-    newDiv = document.createElement("div");
-    newDiv.textContent = answerIndex[indexCounter];
-    answers.appendChild(newDiv);
-    indexCounter++;
-  }
+  // Display the question
+  question.textContent = shuffledQuizArr[currentQuestion].question;
+  // Display the answers
+  optionA.textContent = shuffledQuizArr[currentQuestion].answerList.a;
+  optionB.textContent = shuffledQuizArr[currentQuestion].answerList.b;
+  optionC.textContent = shuffledQuizArr[currentQuestion].answerList.c;
+  optionD.textContent = shuffledQuizArr[currentQuestion].answerList.d;
 }
 
-showQuiz();
+// Add event listener to the main button to begin the quiz
+beginBtn.addEventListener("click", beginQuiz);
+
+function beginQuiz() {
+  countdownTimer();
+  showQuiz();
+}
+
+// Loop through all button class elements and add even liteners to all
+for (i = 0; i < answerBtn.length; i++) {
+  let btn = answerBtn[i];
+  btn.addEventListener("click", function () {
+    // If right answer matches the id of the clicked element...
+    if (shuffledQuizArr[currentQuestion].rightAnswer === event.target.id) {
+      let lineBr = document.createElement("HR");
+      // Insert line break and infrom the user of correct answer
+      answers.appendChild(lineBr);
+      info.textContent = "Correct!";
+      // Remove the info after 1 second
+      setTimeout(function () {
+        lineBr.remove();
+        info.textContent = "";
+      }, 1000);
+      // Add 1 to currentQuestion counter to move on t onext question once showQuiz function fires again
+      currentQuestion += 1;
+      // Add 1 to score and display the new score
+      score += 1;
+      scoreEl.textContent = score;
+      // Show next question
+      showQuiz();
+    } else {
+      let lineBr = document.createElement("HR");
+      // Deduct 5 seconds for a wrong answer
+      countdown -= 5;
+      // Insert line break and infrom the user of wrong answer and time penalty
+      answers.appendChild(lineBr);
+      info.textContent = "Wrong, minus 5 seconds!";
+      // Remove the info after 1 second
+      setTimeout(function () {
+        lineBr.remove();
+        info.textContent = "";
+      }, 1000);
+      if (countdown <= 0) {
+        question.textContent = "";
+        optionA.textContent = "";
+        optionB.textContent = "";
+        optionC.textContent = "";
+        optionD.textContent = "";
+        timer.remove();
+        userInitials = prompt("Game over! Enter your initials: ");
+        let newDiv = document.createElement("div");
+        newDiv.textContent = `Thanks for playing! You scored ${score} points. Your highscore havs been registered under ${userInitials}.`;
+        answers.appendChild(newDiv);
+      } else {
+        // Add 1 to currentQuestion counter to move on t onext question once showQuiz function fires again
+        currentQuestion += 1;
+        // Show next question
+        showQuiz();
+      }
+    }
+  });
+}
