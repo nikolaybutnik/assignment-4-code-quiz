@@ -1,14 +1,3 @@
-//Create an array holding objects containing questions and answers
-//Scramble the order of the array
-//Use a for loops to display the question and a list of possible answers on the screen
-//Create event listeners for each possible answer
-//Create a countdown timer using setInterval() to update the variable holding the timer every second
-//Deduct 2 seconds from the timer if wrong answer is selected
-//Create a variable for keeping score, and increase by 1 with each correct answer
-//Create a while loop that continues to execute while the timer is > 0
-//Once countdown has finished, get the score variable, ask the user for initials, and store the results in local storage
-//Create a way to view highscores (read results from local storage)
-
 // Get HTML elements
 let timer = document.getElementById("timer");
 let question = document.getElementById("question");
@@ -21,6 +10,7 @@ let optionB = document.getElementById("b");
 let optionC = document.getElementById("c");
 let optionD = document.getElementById("d");
 let info = document.getElementById("info");
+let highscoreBtn = document.getElementById("highscoreBtn");
 
 // Define an array that contains a list of objects containing questions, possible answers, and a correct answer.
 let quizArr = [
@@ -202,7 +192,7 @@ let quizArr = [
 let score = 0;
 
 // Define a function that keeps count of remaining time. When countdown reaches 0, clear the screen
-let countdown = 360;
+let countdown = 0;
 function countdownTimer() {
   let timerInterval = setInterval(function () {
     countdown--;
@@ -216,15 +206,16 @@ function countdownTimer() {
       optionD.textContent = "";
       userInitials = prompt("Game over! Enter your initials: ");
       timer.textContent = `Thanks for playing! You scored ${score} points. Your highscore has been registered under ${userInitials}.`;
+      // Save result to local storage
+      if (score > localStorage.getItem(userInitials)) {
+        localStorage.setItem(userInitials, score);
+      }
     }
   }, 1000);
 }
 
-//Shuffle the quizArr to scramble the order of questions
-let shuffledQuizArr = quizArr.sort(() => Math.random() - 0.5);
-// Credit: https://flaviocopes.com/how-to-shuffle-array-javascript/
-
-console.log(shuffledQuizArr);
+//Create empty array. This array will contain a shuffled Q/A array
+let shuffledQuizArr = [];
 
 // Define a counter to set question order
 let currentQuestion = 0;
@@ -241,7 +232,7 @@ function showQuiz() {
   optionD.textContent = shuffledQuizArr[currentQuestion].answerList.d;
 }
 
-// Define a function that advances to the next question
+// Define a function that advances to the next question or ends the game if end of game criteria is met
 function nextQuestion() {
   currentQuestion += 1;
   if (currentQuestion !== 15) {
@@ -259,13 +250,37 @@ function nextQuestion() {
     let newDiv = document.createElement("div");
     newDiv.textContent = `Thanks for playing! You scored ${score} points. Your highscore has been registered under ${userInitials}.`;
     answers.appendChild(newDiv);
+    // Save result to local storage
+    if (score > localStorage.getItem(userInitials)) {
+      localStorage.setItem(userInitials, score);
+    }
   }
 }
 
-// Add event listener to the main button to begin the quiz
+// Add event listener for beginBtn to begin the quiz
 beginBtn.addEventListener("click", beginQuiz);
 
+// Add event listener for highscoreBtn to display highscore
+highscoreBtn.addEventListener("click", function () {
+  let userInput = prompt("Enter your initials: ");
+  let userScore = localStorage.getItem(userInput);
+  if (userScore === null) {
+    alert("You haven't taken the quiz yet!");
+  } else {
+    alert(`Your highscore is ${userScore}`);
+  }
+});
+
 function beginQuiz() {
+  // Reset the countdown
+  countdown = 60;
+  // Reset score
+  score = 0;
+  // Shuffle the questions array
+  shuffledQuizArr = quizArr.sort(() => Math.random() - 0.5);
+  // Credit: https://flaviocopes.com/how-to-shuffle-array-javascript/
+  // Hide the button
+  beginBtn.style.visibility = "hidden";
   countdownTimer();
   showQuiz();
 }
@@ -286,7 +301,7 @@ for (i = 0; i < answerBtn.length; i++) {
         info.textContent = "";
       }, 1000);
       score += 1;
-      scoreEl.textContent = score;
+      scoreEl.textContent = `Score: ${score}`;
       // Next question
       nextQuestion();
       // Add 1 to score and display the new score
@@ -302,7 +317,7 @@ for (i = 0; i < answerBtn.length; i++) {
         lineBr.remove();
         info.textContent = "";
       }, 1000);
-      // If countdown is 0 or less, clear screen and prompt user input. Display results
+      // If countdown is 0 or less after the button click, clear screen and prompt user input for initials. Display results
       if (countdown <= 0) {
         question.textContent = "";
         optionA.textContent = "";
@@ -314,6 +329,10 @@ for (i = 0; i < answerBtn.length; i++) {
         let newDiv = document.createElement("div");
         newDiv.textContent = `Thanks for playing! You scored ${score} points. Your highscore has been registered under ${userInitials}.`;
         answers.appendChild(newDiv);
+        // Save result to local storage
+        if (score > localStorage.getItem(userInitials)) {
+          localStorage.setItem(userInitials, score);
+        }
       } else {
         // Next question
         nextQuestion();
