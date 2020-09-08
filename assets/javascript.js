@@ -197,8 +197,9 @@ let score = 0;
 
 // Define a function that keeps count of remaining time. When countdown reaches 0, clear the screen
 let countdown = 0;
+let timerInterval = "";
 function countdownTimer() {
-  let timerInterval = setInterval(function () {
+  timerInterval = setInterval(function () {
     countdown--;
     timer.textContent = `${countdown} seconds left`;
     if (countdown === 0) {
@@ -250,7 +251,7 @@ function nextQuestion() {
     optionB.textContent = "";
     optionC.textContent = "";
     optionD.textContent = "";
-    timer.remove();
+    clearInterval(timerInterval);
     userInitials = prompt(
       "You've answered all the questions! Enter your initials: "
     );
@@ -371,7 +372,7 @@ for (i = 0; i < answerBtn.length; i++) {
         optionB.textContent = "";
         optionC.textContent = "";
         optionD.textContent = "";
-        timer.remove();
+        clearInterval(timerInterval);
         userInitials = prompt("Game over! Enter your initials: ");
         let newDiv = document.createElement("div");
         newDiv.textContent = `You scored ${score} points! Your highscore has been registered under initials ${userInitials}.`;
