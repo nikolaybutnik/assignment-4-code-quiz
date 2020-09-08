@@ -1,0 +1,22 @@
+.button {
+  background: rgb(190, 190, 190);
+  margin: 5px;
+}
+
+#score {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+#timer {
+  font-size: 22px;
+}
+
+#info {
+  font-size: 20px;
+}
+
+#question {
+  font-size: 20px;
+  font-weight: bold;
+}

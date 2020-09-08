@@ -22,27 +22,46 @@
     <title>Coding Quiz</title>
   </head>
   <body>
-    <h1>Coding Quiz</h1>
+    <h1 class="text-center">Coding Quiz</h1>
+    <class class="container">
+      <div class="row">
+        <div class="col text-center">
+          <div id="score">Score: 0</div>
+          <button id="beginBtn">Begin Quiz!</button>
+          <button id="highscoreBtn">View Highscore</button>
+          <button id="restartBtn">Restart</button>
+          <div id="timer">You have 60 seconds to answer 15 questions</div>
+        </div>
+      </div>
+    </class>
 
-    <div id="score">Score: 0</div>
-
-    <button id="beginBtn">Begin Quiz!</button>
-
-    <button id="highscoreBtn">View HighScore</button>
-
-    <div id="timer">60</div>
-
-    <section>
-      <div id="question"></div>
-      <div id="answers">
-        <div id="a" class="button"></div>
-        <div id="b" class="button"></div>
-        <div id="c" class="button"></div>
-        <div id="d" class="button"></div>
+    <section class="container">
+      <div class="row">
+        <div class="col-md-12 text-center">
+          <div id="question"></div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-4"></div>
+        <div class="col-md-4 text-center">
+          <div id="answers">
+            <div id="a" class="button"></div>
+            <div id="b" class="button"></div>
+            <div id="c" class="button"></div>
+            <div id="d" class="button"></div>
+          </div>
+          <div class="col-md-4"></div>
+        </div>
       </div>
     </section>
 
-    <div id="info"></div>
+    <class class="container">
+      <div class="row">
+        <div class="col text-center">
+          <div id="info"></div>
+        </div>
+      </div>
+    </class>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

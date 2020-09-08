@@ -11,6 +11,10 @@ let optionC = document.getElementById("c");
 let optionD = document.getElementById("d");
 let info = document.getElementById("info");
 let highscoreBtn = document.getElementById("highscoreBtn");
+let restartBtn = document.getElementById("restartBtn");
+
+// Disable restartBtn at the beginning
+restartBtn.disabled = true;
 
 // Define an array that contains a list of objects containing questions, possible answers, and a correct answer.
 let quizArr = [
@@ -165,7 +169,7 @@ let quizArr = [
   },
 
   {
-    question: "What is the current version of HTML?",
+    question: "What is the latest version of HTML?",
     answerList: {
       a: "3",
       b: "5",
@@ -205,11 +209,15 @@ function countdownTimer() {
       optionC.textContent = "";
       optionD.textContent = "";
       userInitials = prompt("Game over! Enter your initials: ");
-      timer.textContent = `Thanks for playing! You scored ${score} points. Your highscore has been registered under ${userInitials}.`;
+      timer.textContent = `You scored ${score} points! Your highscore has been registered under initials ${userInitials}.`;
       // Save result to local storage
       if (score > localStorage.getItem(userInitials)) {
         localStorage.setItem(userInitials, score);
       }
+      // Enable restart button after quiz ends
+      beginBtn.disabled = true;
+      highscoreBtn.disabled = false;
+      restartBtn.disabled = false;
     }
   }, 1000);
 }
@@ -222,7 +230,6 @@ let currentQuestion = 0;
 
 // Define a function that uses the currentQuestion counter to display the appropriate question and set of answers on the screen
 function showQuiz() {
-  console.log(currentQuestion);
   // Display the question
   question.textContent = shuffledQuizArr[currentQuestion].question;
   // Display the answers
@@ -248,12 +255,17 @@ function nextQuestion() {
       "You've answered all the questions! Enter your initials: "
     );
     let newDiv = document.createElement("div");
-    newDiv.textContent = `Thanks for playing! You scored ${score} points. Your highscore has been registered under ${userInitials}.`;
+    newDiv.textContent = `You scored ${score} points! Your highscore has been registered under initials ${userInitials}.`;
+    newDiv.setAttribute("id", "victory");
     answers.appendChild(newDiv);
     // Save result to local storage
     if (score > localStorage.getItem(userInitials)) {
       localStorage.setItem(userInitials, score);
     }
+    // Enable restart button after quiz ends
+    beginBtn.disabled = true;
+    highscoreBtn.disabled = false;
+    restartBtn.disabled = false;
   }
 }
 
@@ -271,17 +283,52 @@ highscoreBtn.addEventListener("click", function () {
   }
 });
 
-function beginQuiz() {
+// Add event listener to restartBtn that resets the quiz
+restartBtn.addEventListener("click", restart);
+
+// Define a function that restarts the quiz
+function restart() {
+  // Clear the screen
+  question.textContent = "";
+  optionA.textContent = "";
+  optionB.textContent = "";
+  optionC.textContent = "";
+  optionD.textContent = "";
+  if (document.getElementById("victory")) {
+    document.getElementById("victory").remove();
+  }
+  // Reset current question
+  currentQuestion = 0;
   // Reset the countdown
   countdown = 60;
   // Reset score
   score = 0;
+  scoreEl.textContent = `Score: ${score}`;
   // Shuffle the questions array
-  shuffledQuizArr = quizArr.sort(() => Math.random() - 0.5);
-  // Credit: https://flaviocopes.com/how-to-shuffle-array-javascript/
-  // Hide the button
-  beginBtn.style.visibility = "hidden";
+  shuffledQuizArr = quizArr.sort(() => Math.random() - 0.5); // Credit: https://flaviocopes.com/how-to-shuffle-array-javascript/
+  // Disable buttons while quiz is active
+  beginBtn.disabled = true;
+  highscoreBtn.disabled = true;
+  restartBtn.disabled = true;
+  // Start countdown
   countdownTimer();
+  // Show the question and list of answers
+  showQuiz();
+}
+
+// Define a function that starts the quiz
+function beginQuiz() {
+  // Set the countdown
+  countdown = 60;
+  // Shuffle the questions array
+  shuffledQuizArr = quizArr.sort(() => Math.random() - 0.5); // Credit: https://flaviocopes.com/how-to-shuffle-array-javascript/
+  // Disable buttons while quiz is active
+  beginBtn.disabled = true;
+  highscoreBtn.disabled = true;
+  restartBtn.disabled = true;
+  // Start countdown
+  countdownTimer();
+  // Show the question and list of answers
   showQuiz();
 }
 
@@ -327,12 +374,17 @@ for (i = 0; i < answerBtn.length; i++) {
         timer.remove();
         userInitials = prompt("Game over! Enter your initials: ");
         let newDiv = document.createElement("div");
-        newDiv.textContent = `Thanks for playing! You scored ${score} points. Your highscore has been registered under ${userInitials}.`;
+        newDiv.textContent = `You scored ${score} points! Your highscore has been registered under initials ${userInitials}.`;
+        newDiv.setAttribute("id", "victory");
         answers.appendChild(newDiv);
         // Save result to local storage
         if (score > localStorage.getItem(userInitials)) {
           localStorage.setItem(userInitials, score);
         }
+        // Enable reset button after quiz ends
+        beginBtn.disabled = true;
+        highscoreBtn.disabled = false;
+        restartBtn.disabled = false;
       } else {
         // Next question
         nextQuestion();
