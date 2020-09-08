@@ -209,7 +209,7 @@ function countdownTimer() {
       optionB.textContent = "";
       optionC.textContent = "";
       optionD.textContent = "";
-      userInitials = prompt("Game over! Enter your initials: ");
+      userInitials = prompt("Time is up! Enter your initials: ");
       timer.textContent = `You scored ${score} points! Your highscore has been registered under initials ${userInitials}.`;
       // Save result to local storage
       if (score > localStorage.getItem(userInitials)) {
