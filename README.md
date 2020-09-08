@@ -1,6 +1,6 @@
 # Assignment 4: Code Quiz
 
-Assignment 4 for Carleton University Coding Bootcamp. This assignment focused on creating an interactive web-based multiple choice quiz. The assigment involved creating a list of question and answer objects, presenting them to the user, and checking the user's answers. User score is kept and saved to loccal storage, and can be viewed at will.
+Assignment 4 for Carleton University Coding Bootcamp. This assignment focused on creating an interactive web-based multiple choice quiz. The assigment involved creating a list of question and answer objects, presenting them to the user, and checking the user's answers. User score is kept and saved to local storage, and can be viewed at will.
 [Link to application](https://nikolaybutnik.github.io/assignment-4-code-quiz/)
 
 ## Pupose
