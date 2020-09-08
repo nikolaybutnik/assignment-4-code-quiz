@@ -202,7 +202,7 @@ let quizArr = [
 let score = 0;
 
 // Define a function that keeps count of remaining time. When countdown reaches 0, clear the screen
-let countdown = 60;
+let countdown = 360;
 function countdownTimer() {
   let timerInterval = setInterval(function () {
     countdown--;
@@ -215,7 +215,7 @@ function countdownTimer() {
       optionC.textContent = "";
       optionD.textContent = "";
       userInitials = prompt("Game over! Enter your initials: ");
-      timer.textContent = `Thanks for playing! You scored ${score} points. Your highscore havs been registered under ${userInitials}.`;
+      timer.textContent = `Thanks for playing! You scored ${score} points. Your highscore has been registered under ${userInitials}.`;
     }
   }, 1000);
 }
@@ -231,6 +231,7 @@ let currentQuestion = 0;
 
 // Define a function that uses the currentQuestion counter to display the appropriate question and set of answers on the screen
 function showQuiz() {
+  console.log(currentQuestion);
   // Display the question
   question.textContent = shuffledQuizArr[currentQuestion].question;
   // Display the answers
@@ -238,6 +239,27 @@ function showQuiz() {
   optionB.textContent = shuffledQuizArr[currentQuestion].answerList.b;
   optionC.textContent = shuffledQuizArr[currentQuestion].answerList.c;
   optionD.textContent = shuffledQuizArr[currentQuestion].answerList.d;
+}
+
+// Define a function that advances to the next question
+function nextQuestion() {
+  currentQuestion += 1;
+  if (currentQuestion !== 15) {
+    showQuiz();
+  } else {
+    question.textContent = "";
+    optionA.textContent = "";
+    optionB.textContent = "";
+    optionC.textContent = "";
+    optionD.textContent = "";
+    timer.remove();
+    userInitials = prompt(
+      "You've answered all the questions! Enter your initials: "
+    );
+    let newDiv = document.createElement("div");
+    newDiv.textContent = `Thanks for playing! You scored ${score} points. Your highscore has been registered under ${userInitials}.`;
+    answers.appendChild(newDiv);
+  }
 }
 
 // Add event listener to the main button to begin the quiz
@@ -248,7 +270,7 @@ function beginQuiz() {
   showQuiz();
 }
 
-// Loop through all button class elements and add even liteners to all
+// Loop through all button class elements and add event liteners to all. Add functionality to each button click that keeps score and advances to next question.
 for (i = 0; i < answerBtn.length; i++) {
   let btn = answerBtn[i];
   btn.addEventListener("click", function () {
@@ -263,13 +285,11 @@ for (i = 0; i < answerBtn.length; i++) {
         lineBr.remove();
         info.textContent = "";
       }, 1000);
-      // Add 1 to currentQuestion counter to move on t onext question once showQuiz function fires again
-      currentQuestion += 1;
-      // Add 1 to score and display the new score
       score += 1;
       scoreEl.textContent = score;
-      // Show next question
-      showQuiz();
+      // Next question
+      nextQuestion();
+      // Add 1 to score and display the new score
     } else {
       let lineBr = document.createElement("HR");
       // Deduct 5 seconds for a wrong answer
@@ -282,6 +302,7 @@ for (i = 0; i < answerBtn.length; i++) {
         lineBr.remove();
         info.textContent = "";
       }, 1000);
+      // If countdown is 0 or less, clear screen and prompt user input. Display results
       if (countdown <= 0) {
         question.textContent = "";
         optionA.textContent = "";
@@ -291,13 +312,11 @@ for (i = 0; i < answerBtn.length; i++) {
         timer.remove();
         userInitials = prompt("Game over! Enter your initials: ");
         let newDiv = document.createElement("div");
-        newDiv.textContent = `Thanks for playing! You scored ${score} points. Your highscore havs been registered under ${userInitials}.`;
+        newDiv.textContent = `Thanks for playing! You scored ${score} points. Your highscore has been registered under ${userInitials}.`;
         answers.appendChild(newDiv);
       } else {
-        // Add 1 to currentQuestion counter to move on t onext question once showQuiz function fires again
-        currentQuestion += 1;
-        // Show next question
-        showQuiz();
+        // Next question
+        nextQuestion();
       }
     }
   });
